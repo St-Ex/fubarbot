@@ -1,0 +1,21 @@
+{
+  "name": "fubarbot",
+  "version": "0.0.1",
+  "main": "bot.js",
+  "author": "THomas de Saint-Exupéry",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "npm-watch": "^0.3.0"
+  },
+  "scripts": {
+    "bot": "node --experimental-modules ./bot.mjs",
+    "watch": "npm-watch"
+  },
+  "watch": {
+    "bot": "*.mjs"
+  }
+}
