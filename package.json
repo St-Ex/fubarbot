@@ -12,7 +12,7 @@
     "npm-watch": "^0.3.0"
   },
   "scripts": {
-    "bot": "node --experimental-modules ./bot.mjs",
+    "bot": "node --experimental-modules --experimental-repl-await ./bot.mjs",
     "watch": "npm-watch"
   },
   "watch": {

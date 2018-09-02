@@ -103,7 +103,7 @@ export default function botRoll (message, noLimit) {
   }
 
   return new Discord.RichEmbed()
-    .setTitle(result.text)
+    .setTitle(message.author.username + ' > ' + result.text)
     .setColor(result.color)
     .setDescription(result.dices.join(' '))
 }
