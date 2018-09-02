@@ -1,3 +1,4 @@
+import Config from './Config'
 import Discord from 'discord.js'
 
 const REG = /[+\-]\d+/g
@@ -67,9 +68,8 @@ function roll (bonus, malus) {
 /**
  * Handle roll by the bot
  * @param message
- * @param noLimit if true, no limit mode is on
  */
-export default function botRoll (message, noLimit) {
+export default function botRoll (message) {
   let bonus = 0, malus = 0
   let group = REG.exec(message.content)
   while (group) {
@@ -93,7 +93,7 @@ export default function botRoll (message, noLimit) {
     result.dices[result.dices.length - 1] += '~~ '
   }
 
-  if (noLimit) {
+  if (Config['roll.criticalMode']) {
     let number = result.dices.filter(
       d => (d === 1 && result.text === RESULT[0])
         || (d === 6 && result.text === RESULT[5])).length - 1

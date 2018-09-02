@@ -36,7 +36,9 @@ let run = function (message) {
     }
 
     if (typeof runner[cmd] === 'function') {
-      message.channel.send(runner[cmd](message))
+      runner.message.content = runner.message.content
+        .replace('!' + cmd, '').trim()
+      message.channel.send(runner[cmd]())
     } else {
       message.reply('_What is '
         + (cmd === 'love'
@@ -48,4 +50,7 @@ let run = function (message) {
 
 bot.on('message', message => run(message))
 bot.on('messageUpdate', (oldMessage, newMessage) => run(newMessage))
+bot.on('channelDelete', channel => new Character({channel}).delete())
 bot.login(auth.token)
+
+export default bot

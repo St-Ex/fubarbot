@@ -25,6 +25,18 @@ class Store {
     return this._objects[name]
   }
 
+  delete (name) {
+    if (this._objects[name]) {
+      logger.info({message: 'delete', name})
+      delete this._objects[name]
+      save()
+    }
+  }
+
+  list () {
+    return Object.keys(this._objects)
+  }
+
   reload () {
     Object.values(this._objects).forEach(o => {
       Object.setPrototypeOf(o, Models[this._model].prototype)
@@ -69,15 +81,15 @@ if (fs.existsSync(file)) {
   reset()
 }
 
+function save(){
+  fs.writeFileSync(file,
+    JSON.stringify({config: Config, stores: Stores}, null, 2)
+  )
+}
+
 /**
  * Flush config and stores every 2 sec
  */
-setInterval(
-  () => fs.writeFileSync(
-    file,
-    JSON.stringify({config: Config, stores: Stores}, null, 2),
-  ),
-  2000,
-)
+setInterval(save, 2000)
 
 export default Stores
