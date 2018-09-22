@@ -1,6 +1,9 @@
 import Stores from '../Stores'
 import Help from './Help'
 
+const CONDITIONS = 'conditions'
+const DRIVES = 'drives'
+
 class Character extends Help {
 
   /**
@@ -24,6 +27,9 @@ class Character extends Help {
     h['s(how) (full)'] = 'Shows ' + this.current.name + '\'s data'
     h['concept            (what)'] = 'Shows/Edits concept'
     h['description        (what)'] = 'Shows/Edits description'
+    h['r++'] = '+1 resolve point'
+    h['r--'] = '-1 resolve point'
+    h['rmax'] = 'Sets maximum resolve points'
     h['a(dd)t(rademark)    what'] = 'Adds trademark'
     h['a(dd)f(law)         what'] = 'Adds flaw'
     h['a(dd)r(elation)     what'] = 'Adds relation'
@@ -35,6 +41,7 @@ class Character extends Help {
     h['s(et)cu(rrent)      index'] = 'Sets drives as current'
     h['s(et)ac(hieved)     index'] = 'Sets drives as achieved'
     h['s(et)fa(ailed)      index'] = 'Sets drives as failed'
+    h['s(dd)t(humbnail)    url'] = 'Sets thumbnail (if none, disable it)'
     h['r(emove)t(rademark) index'] = 'Removes trademark'
     h['r(emove)f(flaw)     index'] = 'Removes flaw'
     h['r(emove)r(relation) index'] = 'Removes relation'
@@ -53,7 +60,7 @@ class Character extends Help {
 
   rt () { return this.removeTrademark()}
 
-  removeTrademark () { return this._remove('trademark')}
+  removeTrademark () { return this._remove('trademarks')}
 
   af () { return this.addFlaw()}
 
@@ -86,19 +93,19 @@ class Character extends Help {
 
   smi () { return this.setMinor()}
 
-  setMinor () { return this._toggle('conditions', 'minor')}
+  setMinor () { return this._toggle(CONDITIONS, 'minor')}
 
   smo () { return this.setModerate()}
 
-  setModerate () { return this._toggle('conditions', 'moderate')}
+  setModerate () { return this._toggle(CONDITIONS, 'moderate')}
 
   sma () { return this.setMajor()}
 
-  setMajor () { return this._toggle('conditions', 'major')}
+  setMajor () { return this._toggle(CONDITIONS, 'major')}
 
   rc () { return this.removeCondition()}
 
-  removeCondition () { return this._remove('conditions')}
+  removeCondition () { return this._remove(CONDITIONS)}
 
   ad () {return this.addDrive() }
 
@@ -109,19 +116,26 @@ class Character extends Help {
 
   scu () { return this.setCurrent()}
 
-  setCurrent () { return this._toggle('drives', 'current')}
+  setCurrent () { return this._toggle(DRIVES, 'current')}
 
   sac () {return this.setAchieved()}
 
-  setAchieved () { return this._toggle('drives', 'achieved')}
+  setAchieved () { return this._toggle(DRIVES, 'achieved')}
 
   sfa () {return this.setFailed()}
 
-  setFailed () {return this._toggle('drives', 'failed')}
+  setFailed () {return this._toggle(DRIVES, 'failed')}
 
   rd () { return this.removeDrive()}
 
-  removeDrive () {return this._remove('drives')}
+  removeDrive () {return this._remove(DRIVES)}
+
+  st () { return this.setThumbnail()}
+
+  setThumbnail(){
+    this.current.thumbnail = this.message.content
+    return 'Thumbnail set'
+  }
 
   _toggle (what, value) {
     let i = parseInt(this.message.content)
@@ -140,6 +154,35 @@ class Character extends Help {
       return 'Removed'
     } else {
       return 'Argument must be the index to delete'
+    }
+  }
+
+  'r++' () {
+    if (this.current.resolvePoints < this.current.maxResolvePoints) {
+      this.current.resolvePoints++
+    }
+    return this.current.rp
+  }
+
+  'r--' () {
+    if (this.current.resolvePoints === 0) {
+      this.current.retired = true
+      return ':skull_crossbones: ' + this.current.name + ' fades into history.'
+    }
+    this.current.resolvePoints--
+    return this.current.rp + (this.current.resolvePoints ? '' : (' :warning: '
+      + this.current.name + ' losts the scenarium armor.'))
+  }
+
+  rmax () {
+    let i = parseInt(this.message.content)
+    if (i >= 0) {
+      this.current.maxResolvePoints = i
+      this.current.resolvePoints = this.current.maxResolvePoints
+      this.current.retired = false
+      return this.current.rp
+    } else {
+      return 'Arguments need to be a positive integer'
     }
   }
 

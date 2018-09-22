@@ -20,6 +20,7 @@ class Character extends Model {
   constructor (name) {
     super(name)
     this.concept = 'New Character'
+    this.retired = false
     this.maxResolvePoints = 0
     this.resolvePoints = 0
     this.trademarks = []
@@ -30,6 +31,13 @@ class Character extends Model {
     // {status, label}
     this.conditions = []
     this.descripton = 'A newly created character'
+    this.thumbnail = null
+  }
+
+  get rp () {
+    return this.retired
+      ? ':skull_crossbones: ' :
+      (this.resolvePoints + ' / ' + this.maxResolvePoints)
   }
 
   /**
@@ -37,11 +45,9 @@ class Character extends Model {
    */
   parse (full = false) {
     let embed = new Discord.RichEmbed()
-      .setTitle(this.name + ' *' + this.concept + '* ')
-      .addField(
-        'Resolve Points',
-        this.resolvePoints + ' / ' + this.maxResolvePoints, false,
-      )
+      .setTitle(this.name + ', *The ' + this.concept + '* ')
+      .addField('Resolve Points', this.rp,
+        false)
 
     if (full) {
       embed.setDescription(this.description)
@@ -76,6 +82,9 @@ class Character extends Model {
           .join('\n') || 'None', false)
     }
 
+    if (this.thumbnail){
+      embed.setThumbnail(this.thumbnail)
+    }
     return embed
   }
 }
