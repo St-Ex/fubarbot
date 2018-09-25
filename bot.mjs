@@ -1,22 +1,15 @@
 import Discord from 'discord.js'
-import logger from 'winston'
 import auth from './auth.json'
 import Admin from './command/Admin'
 import Character from './command/Character'
 import Roll from './command/Roll'
-
-// Configure logger settings
-logger.remove(logger.transports.Console)
-logger.add(new logger.transports.Console, {colorize: true})
-logger.level = 'debug'
+import logger from './Logger'
 
 // Initialize Discord Bot
 let bot = new Discord.Client()
 
 bot.on('ready', () => {
-  logger.info('Connected')
-  logger.info('Logged in as: ')
-  logger.info(bot.username + ' - (' + bot.id + ')')
+  logger.info({message: 'Logged in as ' + bot.user.username, id: bot.user.id})
 })
 
 bot.on('error', evt => {
@@ -50,7 +43,7 @@ let run = function (message) {
 
 bot.on('message', message => run(message))
 bot.on('messageUpdate', (oldMessage, newMessage) => run(newMessage))
-bot.on('channelDelete', channel => new Character({channel}).delete())
+bot.on('channelDelete', channel => new Admin({}).delete(channel))
 bot.login(auth.token)
 
 export default bot

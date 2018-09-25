@@ -1,5 +1,6 @@
 import bot from '../bot'
 import Config, { reset as configReset } from '../Config'
+import Character from '../model/Character'
 import Stores, { reset } from '../Stores'
 import Help from './Help'
 
@@ -11,18 +12,14 @@ class Admin extends Help {
 
   helps () {
     let h = super.helps()
-    h['clean'] = 'Clean all Character without channel'
-    h['c(onfig)'] = 'Prints configuration'
-    h['reset'] = 'Resets full game'
-    h['e(nable)'] = 'Enables configuration'
-    h['d(isable)'] = 'Disables configuration'
+    h.push(['clean', 'Clean all Character without channel'])
+    h.push(['config', 'Prints configuration'])
+    h.push(['enable', 'Enables configuration', 'e'])
+    h.push(['disable', 'Disables configuration', 'd'])
+    h.push(['delete #channel', 'Deletes character (and character\'s channel)'])
+    h.push(['reset', 'Resets full game'])
     return h
   }
-
-  /**
-   * @return {{embed}}
-   */
-  c () { return this.config()}
 
   /**
    * @return {{embed}}
@@ -36,17 +33,14 @@ class Admin extends Help {
 
   clean () {
     let blank_run = this.message.content !== CLEAN_CONFIRMED
-    let names = Stores.Character.list()
     let cleaned = []
-    names.forEach(
-      name => {
-        let chan = bot.channels.find(
-          val => val.name === 'c-' + name.toLowerCase().split(' ').join('-'),
-        )
+    Stores.Character.forEach(
+      char => {
+        let chan = bot.channels.find(val => val.name === char.channelName)
         if (!chan) {
-          cleaned.push(name)
+          cleaned.push(char.name)
           if (!blank_run) {
-            Stores.Character.delete(name)
+            Stores.Character.delete(char.name)
           }
         }
       },
@@ -64,6 +58,34 @@ class Admin extends Help {
    */
   config () {
     return '```JSON\n' + JSON.stringify(Config, null, 2) + '```'
+  }
+
+  /**
+   * Erases character
+   * @return {string}
+   */
+  delete (channel) {
+    if (!channel) {
+      let id = this.message.content.match(/^<#([0-9]+)>$/)
+      if (id) {
+        channel = bot.channels.get(id[1])
+      } else {
+        let channelName = this.message.content.replace(/^#/, '')
+        console.log(channelName)
+        console.log(bot.channels)
+        channel = bot.channels.find(
+          channel => channel.name === channelName,
+        )
+      }
+
+      if (!channel) {
+        return ':bangbang: Cannot find channel ' + this.message.content
+      }
+    }
+    let char = Stores.Character.get(Character.getName(channel.name))
+    Stores.Character.delete(char.name)
+    channel.delete(char.name + ' deleted')
+    return char.name + ' deleted'
   }
 
   /**

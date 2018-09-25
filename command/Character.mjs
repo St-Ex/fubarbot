@@ -1,3 +1,4 @@
+import Model from '../model/Character'
 import Stores from '../Stores'
 import Help from './Help'
 
@@ -12,42 +13,38 @@ class Character extends Help {
    */
   get current () {
     if (!this._current) {
-      let name = this.message.channel.name
-        .replace('c-', '')
-        .split('-')
-        .map(t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase())
-        .join(' ')
-      this._current = Stores.Character.get(name)
+      this._current = Stores.Character.get(
+        Model.getName(this.message.channel.name)
+      )
     }
     return this._current
   }
 
   helps () {
     let h = super.helps()
-    h['s(how) (full)'] = 'Shows ' + this.current.name + '\'s data'
-    h['concept            (what)'] = 'Shows/Edits concept'
-    h['description        (what)'] = 'Shows/Edits description'
-    h['r++'] = '+1 resolve point'
-    h['r--'] = '-1 resolve point'
-    h['rmax'] = 'Sets maximum resolve points'
-    h['a(dd)t(rademark)    what'] = 'Adds trademark'
-    h['a(dd)f(law)         what'] = 'Adds flaw'
-    h['a(dd)r(elation)     what'] = 'Adds relation'
-    h['a(dd)c(ondition)    what'] = 'Adds condition'
-    h['a(dd)d(rive)        what'] = 'Adds drive'
-    h['s(et)mi(nor)        index'] = 'Sets condition as minor'
-    h['s(et)mo(derate)     index'] = 'Sets condition as moderated'
-    h['s(et)ma(jor)        index'] = 'Sets condition as major'
-    h['s(et)cu(rrent)      index'] = 'Sets drives as current'
-    h['s(et)ac(hieved)     index'] = 'Sets drives as achieved'
-    h['s(et)fa(ailed)      index'] = 'Sets drives as failed'
-    h['s(dd)t(humbnail)    url'] = 'Sets thumbnail (if none, disable it)'
-    h['r(emove)t(rademark) index'] = 'Removes trademark'
-    h['r(emove)f(flaw)     index'] = 'Removes flaw'
-    h['r(emove)r(relation) index'] = 'Removes relation'
-    h['r(emove)c(ondition) index'] = 'Removes condition'
-    h['r(emove)d(rive)     index'] = 'Removes drive'
-    h.delete = 'Delete ' + this.current.name + ' !! This action is permanent !!'
+    h.push(['show (full)', 'Shows ' + this.current.name + '\'s data','s'])
+    h.push(['concept         (what)', 'Shows/Edits concept',''])
+    h.push(['description     (what)', 'Shows/Edits description',''])
+    h.push(['r++', '+1 resolve point',''])
+    h.push(['r--', '-1 resolve point',''])
+    h.push(['rmax', 'Sets maximum resolve points',''])
+    h.push(['addTrademark    what', 'Adds trademark','at'])
+    h.push(['removeTrademark index', 'Removes trademark','rt'])
+    h.push(['addFlaw         what', 'Adds flaw','af'])
+    h.push(['removeFlaw      index', 'Removes flaw','rf'])
+    h.push(['addRelation     what', 'Adds relation','ar'])
+    h.push(['removeRelation  index', 'Removes relation','rr'])
+    h.push(['addCondition    what', 'Adds condition','ac'])
+    h.push(['removeCondition index', 'Removes condition','rc'])
+    h.push(['addDrive        what', 'Adds drive','ad'])
+    h.push(['removeDrive     index', 'Removes drive','rd'])
+    h.push(['setThumbnail    url', 'Sets thumbnail (if none, disable it)','st'])
+    h.push(['setMinor        index', 'Sets condition as minor','smi'])
+    h.push(['setModerate     index', 'Sets condition as moderated','smo'])
+    h.push(['setMajor        index', 'Sets condition as major','sma'])
+    h.push(['setCurrent      index', 'Sets drives as current','scu'])
+    h.push(['setAchieved     index', 'Sets drives as achieved','sac'])
+    h.push(['setFailed       index', 'Sets drives as failed','sfa'])
     return h
   }
 
@@ -132,7 +129,7 @@ class Character extends Help {
 
   st () { return this.setThumbnail()}
 
-  setThumbnail(){
+  setThumbnail () {
     this.current.thumbnail = this.message.content
     return 'Thumbnail set'
   }
@@ -206,15 +203,6 @@ class Character extends Help {
       this.current.description = this.message.content
     }
     return this.current.description
-  }
-
-  /**
-   * Erases character
-   * @return {string}
-   */
-  delete () {
-    Stores.Character.delete(this.current.name)
-    return ':no_entry_sign:' + this.current.name + ' deleted'
   }
 
   s () { return this.show()}

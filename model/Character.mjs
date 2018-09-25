@@ -82,10 +82,30 @@ class Character extends Model {
           .join('\n') || 'None', false)
     }
 
-    if (this.thumbnail){
+    if (this.thumbnail) {
       embed.setThumbnail(this.thumbnail)
     }
     return embed
+  }
+
+  /**
+   * @param channelName string
+   * @return {*}
+   */
+  static getName (channelName) {
+    return channelName
+      .replace('c-', '')
+      .split('-')
+      .map(t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase())
+      .join(' ')
+  }
+
+  /**
+   *
+   * @return {string}
+   */
+  get channelName () {
+    return 'c-' + this.name.toLowerCase().split(' ').join('-')
   }
 }
 

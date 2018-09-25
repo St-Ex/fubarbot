@@ -3,9 +3,9 @@ import Help from './Help'
 
 class Roll extends Help {
 
-   helps () {
+  helps () {
     let h = super.helps()
-    h['r(oll)'] = 'roll some dices'
+    h.push(['roll', 'roll some dices', 'r'])
     return h
   }
 

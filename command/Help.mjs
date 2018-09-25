@@ -5,7 +5,7 @@ class Help {
   }
 
   helps () {
-    return {'h(elp)': 'Shows this help'}
+    return [['help', 'Shows this help', 'h']]
   }
 
   /**
@@ -13,10 +13,16 @@ class Help {
    * @return {string}
    */
   help () {
-    let maxSize = Math.max(...Object.keys(this.helps()).map(k => k.length))
+    let maxSize = Math.max(
+      ...this.helps()
+        .map(k => 1 + k[0].length + (k[2] ? k[2].length + 2 : 0)),
+    )
     return '```\n'
-      + Object.entries(this.helps())
-        .map(([cmd, text]) => '!' + cmd.padEnd(maxSize) + ' - ' + text)
+      + this.helps()
+        .map(([long, label, short]) => {
+          let cmd = (short ? '!' + short + ' ' : '') + '!' + long
+          return cmd.padEnd(maxSize) + ' - ' + label
+        })
         .join('\n') +
       '```'
   }
