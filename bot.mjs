@@ -31,7 +31,8 @@ let run = function (message) {
     if (typeof runner[cmd] === 'function') {
       runner.message.content = runner.message.content
         .replace('!' + cmd, '').trim()
-      message.channel.send(runner[cmd]())
+      let response = runner[cmd]()
+      if (response) message.channel.send(response)
     } else {
       message.reply('_What is '
         + (cmd === 'love'

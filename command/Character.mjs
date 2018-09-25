@@ -14,7 +14,7 @@ class Character extends Help {
   get current () {
     if (!this._current) {
       this._current = Stores.Character.get(
-        Model.getName(this.message.channel.name)
+        Model.getName(this.message.channel.name),
       )
     }
     return this._current
@@ -22,29 +22,30 @@ class Character extends Help {
 
   helps () {
     let h = super.helps()
-    h.push(['show (full)', 'Shows ' + this.current.name + '\'s data','s'])
-    h.push(['concept         (what)', 'Shows/Edits concept',''])
-    h.push(['description     (what)', 'Shows/Edits description',''])
-    h.push(['r++', '+1 resolve point',''])
-    h.push(['r--', '-1 resolve point',''])
-    h.push(['rmax', 'Sets maximum resolve points',''])
-    h.push(['addTrademark    what', 'Adds trademark','at'])
-    h.push(['removeTrademark index', 'Removes trademark','rt'])
-    h.push(['addFlaw         what', 'Adds flaw','af'])
-    h.push(['removeFlaw      index', 'Removes flaw','rf'])
-    h.push(['addRelation     what', 'Adds relation','ar'])
-    h.push(['removeRelation  index', 'Removes relation','rr'])
-    h.push(['addCondition    what', 'Adds condition','ac'])
-    h.push(['removeCondition index', 'Removes condition','rc'])
-    h.push(['addDrive        what', 'Adds drive','ad'])
-    h.push(['removeDrive     index', 'Removes drive','rd'])
-    h.push(['setThumbnail    url', 'Sets thumbnail (if none, disable it)','st'])
-    h.push(['setMinor        index', 'Sets condition as minor','smi'])
-    h.push(['setModerate     index', 'Sets condition as moderated','smo'])
-    h.push(['setMajor        index', 'Sets condition as major','sma'])
-    h.push(['setCurrent      index', 'Sets drives as current','scu'])
-    h.push(['setAchieved     index', 'Sets drives as achieved','sac'])
-    h.push(['setFailed       index', 'Sets drives as failed','sfa'])
+    h.push(['show (full)', 'Shows ' + this.current.name + '\'s data', 's'])
+    h.push(['concept         (what)', 'Shows/Edits concept', ''])
+    h.push(['description     (what)', 'Shows/Edits description', ''])
+    h.push(['r++', '+1 resolve point', ''])
+    h.push(['r--', '-1 resolve point', ''])
+    h.push(['rmax', 'Sets maximum resolve points', ''])
+    h.push(['addTrademark    what', 'Adds trademark', 'at'])
+    h.push(['removeTrademark index', 'Removes trademark', 'rt'])
+    h.push(['addFlaw         what', 'Adds flaw', 'af'])
+    h.push(['removeFlaw      index', 'Removes flaw', 'rf'])
+    h.push(['addRelation     what', 'Adds relation', 'ar'])
+    h.push(['removeRelation  index', 'Removes relation', 'rr'])
+    h.push(['addCondition    what', 'Adds condition', 'ac'])
+    h.push(['removeCondition index', 'Removes condition', 'rc'])
+    h.push(['addDrive        what', 'Adds drive', 'ad'])
+    h.push(['removeDrive     index', 'Removes drive', 'rd'])
+    h.push(
+      ['setThumbnail    url', 'Sets thumbnail (if none, disable it)', 'st'])
+    h.push(['setMinor        index', 'Sets condition as minor', 'smi'])
+    h.push(['setModerate     index', 'Sets condition as moderated', 'smo'])
+    h.push(['setMajor        index', 'Sets condition as major', 'sma'])
+    h.push(['setCurrent      index', 'Sets drives as current', 'scu'])
+    h.push(['setAchieved     index', 'Sets drives as achieved', 'sac'])
+    h.push(['setFailed       index', 'Sets drives as failed', 'sfa'])
     return h
   }
 

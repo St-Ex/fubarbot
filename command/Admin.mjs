@@ -84,7 +84,7 @@ class Admin extends Help {
     }
     let char = Stores.Character.get(Character.getName(channel.name))
     Stores.Character.delete(char.name)
-    channel.delete(char.name + ' deleted')
+    channel.delete()
     return char.name + ' deleted'
   }
 
