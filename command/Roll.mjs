@@ -1,3 +1,4 @@
+import Discord from 'discord.js'
 import botRoll from '../roll'
 import Help from './Help'
 
@@ -20,7 +21,11 @@ class Roll extends Help {
    * @return {{embed: *}}
    */
   roll () {
-    return {embed: botRoll(this.message)}
+    let result = botRoll(this.message.content)
+    return new Discord.RichEmbed()
+      .setTitle('@' + this.message.author.username + ' *' + result.text + '*')
+      .setColor(result.color)
+      .setDescription(result.dices.join(' '))
   }
 }
 

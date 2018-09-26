@@ -1,5 +1,4 @@
 import Config from './Config'
-import Discord from 'discord.js'
 
 const REG = /[+\-]\d+/g
 
@@ -67,11 +66,11 @@ function roll (bonus, malus) {
 
 /**
  * Handle roll by the bot
- * @param message
+ * @param arg
  */
-export default function botRoll (message) {
+export default function botRoll (arg) {
   let bonus = 0, malus = 0
-  let group = REG.exec(message.content)
+  let group = REG.exec(arg)
   while (group) {
     group = group[0]
     let operand = group.charAt(0)
@@ -84,7 +83,7 @@ export default function botRoll (message) {
         malus += parseInt(number)
         break
     }
-    group = REG.exec(message.content)
+    group = REG.exec(arg)
   }
 
   let result = roll(bonus, malus)
@@ -102,8 +101,5 @@ export default function botRoll (message) {
     }
   }
 
-  return new Discord.RichEmbed()
-    .setTitle(message.author.username + ' > ' + result.text)
-    .setColor(result.color)
-    .setDescription(result.dices.join(' '))
+  return result
 }

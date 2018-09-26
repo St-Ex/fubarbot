@@ -3,7 +3,7 @@ import winston from 'winston'
 const format = winston.format
 
 const logger = winston.createLogger({
-  level: 'debug',
+  level: 'info',
   format: format.combine(
     format.colorize(),
     format.simple(),

@@ -22,7 +22,7 @@ class Character extends Model {
     this.concept = 'New Character'
     this.retired = false
     this.maxResolvePoints = 0
-    this.resolvePoints = 0
+    this.resolvePoi0nts = 0
     this.trademarks = []
     this.flaws = []
     this.relations = []
@@ -35,9 +35,13 @@ class Character extends Model {
   }
 
   get rp () {
-    return this.retired
-      ? ':skull_crossbones: ' :
-      (this.resolvePoints + ' / ' + this.maxResolvePoints)
+    if (this.retired) return ':skull_crossbones: '
+    if (this.npc) return '*Non-Playing Character*'
+    return this.resolvePoints + ' / ' + this.maxResolvePoints
+  }
+
+  get npc () {
+    return this.maxResolvePoints === 0
   }
 
   /**
@@ -45,14 +49,10 @@ class Character extends Model {
    */
   parse (full = false) {
     let embed = new Discord.RichEmbed()
-      .setTitle(this.name + ', *The ' + this.concept + '* ')
-      .addField('Resolve Points', this.rp,
-        false)
+      .setTitle(this.name + ', *' + this.concept + '* ')
 
-    if (full) {
-      embed.setDescription(this.description)
-    }
-
+    if (!this.npc) {
+    embed.addField('Resolve Points', this.rp, false)
     DESCRIPTORS.forEach(
       descriptor => embed.addField(
         descriptor,
@@ -61,6 +61,22 @@ class Character extends Model {
           .join('\n') || 'None',
         true),
     )
+      if (this.drives.length || full) {
+        embed.addField(
+          'Drives',
+          this.drives
+            .map(
+              (d, i) => (i + 1) + ' - ' + DRIVES_STATUS[d.status] + ' ' +
+                d.label)
+            .join('\n') || 'None', false)
+      }
+    }
+
+    if (this.npc || full) {
+      embed.setDescription(this.description)
+    }
+
+
 
     if (this.conditions.length || full) {
       embed.addField(
@@ -72,15 +88,6 @@ class Character extends Model {
           .join('\n') || 'None', true)
     }
 
-    if (this.drives.length || full) {
-      embed.addField(
-        'Drives',
-        this.drives
-          .map(
-            (d, i) => (i + 1) + ' - ' + DRIVES_STATUS[d.status] + ' ' +
-              d.label)
-          .join('\n') || 'None', false)
-    }
 
     if (this.thumbnail) {
       embed.setThumbnail(this.thumbnail)

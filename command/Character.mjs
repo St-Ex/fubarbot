@@ -9,7 +9,7 @@ class Character extends Help {
 
   /**
    * Current Character
-   * @return {Character}
+   * @return {Model}
    */
   get current () {
     if (!this._current) {
@@ -25,27 +25,31 @@ class Character extends Help {
     h.push(['show (full)', 'Shows ' + this.current.name + '\'s data', 's'])
     h.push(['concept         (what)', 'Shows/Edits concept', ''])
     h.push(['description     (what)', 'Shows/Edits description', ''])
-    h.push(['r++', '+1 resolve point', ''])
-    h.push(['r--', '-1 resolve point', ''])
-    h.push(['rmax', 'Sets maximum resolve points', ''])
-    h.push(['addTrademark    what', 'Adds trademark', 'at'])
-    h.push(['removeTrademark index', 'Removes trademark', 'rt'])
-    h.push(['addFlaw         what', 'Adds flaw', 'af'])
-    h.push(['removeFlaw      index', 'Removes flaw', 'rf'])
-    h.push(['addRelation     what', 'Adds relation', 'ar'])
-    h.push(['removeRelation  index', 'Removes relation', 'rr'])
-    h.push(['addCondition    what', 'Adds condition', 'ac'])
-    h.push(['removeCondition index', 'Removes condition', 'rc'])
-    h.push(['addDrive        what', 'Adds drive', 'ad'])
-    h.push(['removeDrive     index', 'Removes drive', 'rd'])
-    h.push(
-      ['setThumbnail    url', 'Sets thumbnail (if none, disable it)', 'st'])
+    h.push([
+      'resolvePoints',
+      'Sets current and maximum resolve points (0 for NPC)',
+      'rp'])
+    if (!this.current.npc) {
+      h.push(['r++', '+1 resolve point', ''])
+      h.push(['r--', '-1 resolve point', ''])
+      h.push(['addTrademark    what', 'Adds trademark', 'at'])
+      h.push(['removeTrademark index', 'Removes trademark', 'rt'])
+      h.push(['addFlaw         what', 'Adds flaw', 'af'])
+      h.push(['removeFlaw      index', 'Removes flaw', 'rf'])
+      h.push(['addRelation     what', 'Adds relation', 'ar'])
+      h.push(['removeRelation  index', 'Removes relation', 'rr'])
+      h.push(['addCondition    what', 'Adds condition', 'ac'])
+      h.push(['removeCondition index', 'Removes condition', 'rc'])
+      h.push(['addDrive        what', 'Adds drive', 'ad'])
+      h.push(['removeDrive     index', 'Removes drive', 'rd'])
+      h.push(['setCurrent      index', 'Sets drives as current', 'scu'])
+      h.push(['setAchieved     index', 'Sets drives as achieved', 'sac'])
+      h.push(['setFailed       index', 'Sets drives as failed', 'sfa'])
+    }
+    h.push(['thumbnail url', 'Sets thumbnail (if none, disable it)', 't'])
     h.push(['setMinor        index', 'Sets condition as minor', 'smi'])
     h.push(['setModerate     index', 'Sets condition as moderated', 'smo'])
     h.push(['setMajor        index', 'Sets condition as major', 'sma'])
-    h.push(['setCurrent      index', 'Sets drives as current', 'scu'])
-    h.push(['setAchieved     index', 'Sets drives as achieved', 'sac'])
-    h.push(['setFailed       index', 'Sets drives as failed', 'sfa'])
     return h
   }
 
@@ -128,9 +132,9 @@ class Character extends Help {
 
   removeDrive () {return this._remove(DRIVES)}
 
-  st () { return this.setThumbnail()}
+  t () { return this.thumbnail()}
 
-  setThumbnail () {
+  thumbnail () {
     this.current.thumbnail = this.message.content
     return 'Thumbnail set'
   }
@@ -156,6 +160,7 @@ class Character extends Help {
   }
 
   'r++' () {
+    if (this.current.npc) return 'Invalid for NPC'
     if (this.current.resolvePoints < this.current.maxResolvePoints) {
       this.current.resolvePoints++
     }
@@ -163,6 +168,7 @@ class Character extends Help {
   }
 
   'r--' () {
+    if (this.current.npc) return 'Invalid for NPC'
     if (this.current.resolvePoints === 0) {
       this.current.retired = true
       return ':skull_crossbones: ' + this.current.name + ' fades into history.'
@@ -172,16 +178,18 @@ class Character extends Help {
       + this.current.name + ' losts the scenarium armor.'))
   }
 
-  rmax () {
+  rp () { return this.resolvePoints()}
+
+  resolvePoints () {
     let i = parseInt(this.message.content)
     if (i >= 0) {
       this.current.maxResolvePoints = i
       this.current.resolvePoints = this.current.maxResolvePoints
       this.current.retired = false
       return this.current.rp
-    } else {
-      return 'Arguments need to be a positive integer'
     }
+
+    return 'Arguments need to be \n 0 for npn-playing character\n 1 or more for player like character'
   }
 
   /**

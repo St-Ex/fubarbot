@@ -18,7 +18,6 @@ bot.on('error', evt => {
 
 let run = function (message) {
   if (message.content.charAt(0) === '!') {
-    let cmd = message.content.substr(1).split(' ')[0].toLowerCase()
     let runner
     if (message.channel.name.startsWith('c-')) {
       runner = new Character(message)
@@ -28,6 +27,7 @@ let run = function (message) {
       runner = new Roll(message)
     }
 
+    let cmd = message.content.substr(1).split(' ')[0]
     if (typeof runner[cmd] === 'function') {
       runner.message.content = runner.message.content
         .replace('!' + cmd, '').trim()
