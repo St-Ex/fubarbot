@@ -3,8 +3,8 @@
 ## Install 
 
 ``
-ln -rs src node_modules/src
 npm install
+ln -rs src node_modules/src
 ``
 
 ## Run

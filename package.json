@@ -2,7 +2,7 @@
   "name": "fubarbot",
   "version": "0.0.1",
   "main": "bot.js",
-  "author": "THomas de Saint-Exupéry",
+  "author": "Thomas de Saint-Exupéry",
   "license": "MIT",
   "dependencies": {
     "discord.js": "^11.4.2",
