@@ -1,4 +1,4 @@
-import Config from './Config'
+import Config from 'src/Config'
 
 const REG = /[+\-]\d+/g
 
@@ -65,7 +65,7 @@ function roll (bonus, malus) {
 }
 
 /**
- * Handle roll by the bot
+ * Handle roll by the Bot
  * @param arg
  */
 export default function botRoll (arg) {

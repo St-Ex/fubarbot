@@ -2,7 +2,10 @@
 
 ## Install 
 
-``npm install``
+``
+ln -rs src node_modules/src
+npm install
+``
 
 ## Run
 * Create discord app

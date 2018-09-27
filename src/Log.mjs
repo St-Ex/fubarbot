@@ -2,7 +2,7 @@ import winston from 'winston'
 
 const format = winston.format
 
-const logger = winston.createLogger({
+const Log = winston.createLogger({
   level: 'info',
   format: format.combine(
     format.colorize(),
@@ -13,4 +13,4 @@ const logger = winston.createLogger({
   ],
 })
 
-export default logger
+export default Log

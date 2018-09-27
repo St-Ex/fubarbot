@@ -1,6 +1,6 @@
 import Discord from 'discord.js'
-import botRoll from '../roll'
-import Help from './Help'
+import botRoll from 'src/roll'
+import Help from 'src/command/Help'
 
 class Roll extends Help {
 
